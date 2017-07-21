@@ -144,4 +144,4 @@ Il server risponderà sempre `200 OK` su questo endpoint, usando il JSON:
 
 ---
 
-Created by @ar3s3ru and @CDimonaco
+Created by [@ar3s3ru](https://github.com/ar3s3ru) and [@CDimonaco](https://github.com/CDimonaco).
