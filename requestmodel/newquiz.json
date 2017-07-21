@@ -1,0 +1,12 @@
+{
+  "quizId":"imauniqueid",
+  "questions" : [
+    {
+      "question":"I'm a so difficult go question",
+      "option1":"First option",
+      "option2":"Second option",
+      "option3":"Three option",
+      "option4":"Four option"
+    },
+  ]
+}

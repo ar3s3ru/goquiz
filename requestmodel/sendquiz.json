@@ -1,0 +1,23 @@
+//Request body for answer sending
+
+{
+  "answers":[
+    0,
+    1,
+    2,
+  ]
+}
+
+
+//Request body for answer verification
+
+
+{
+  "answers":[
+    {
+      "playerAnswer":2,
+      "correctAnswer":2
+    }
+  ],
+  "totalScore":2
+}
