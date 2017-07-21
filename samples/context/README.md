@@ -6,6 +6,8 @@ In parole povere, `context.Context` è una *mappa key-value estensibile*.
 
 La documentazione riguardante `context.Context` si trova [qui](https://godoc.org/context)!
 
+Un articolo interessante riguardante le keys di `context.Context` si trova [qui](https://medium.com/@matryer/context-keys-in-go-5312346a868d)!
+
 ## `context.Context` nelle HTTP requests
 
 `context.Context` trova particolare utilizzo all'interno degli `http.Handler`.
