@@ -1,12 +1,26 @@
 {
-  "quizId":"imauniqueid",
-  "questions" : [
+  "id": "idquiz",
+  "questions": [
     {
-      "question":"I'm a so difficult go question",
-      "option1":"First option",
-      "option2":"Second option",
-      "option3":"Three option",
-      "option4":"Four option"
+      "question":"Domanda",
+      "answers": [
+        "risposta 1",
+        "risposta 2"
+      ]
     },
+    {
+      "question":"Domanda",
+      "answers": [
+        "risposta 1",
+        "risposta 2"
+      ]
+    },
+    {
+      "question":"Domanda",
+      "answers": [
+        "risposta 1",
+        "risposta 2"
+      ]
+    }
   ]
 }

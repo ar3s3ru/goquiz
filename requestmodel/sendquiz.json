@@ -15,9 +15,9 @@
 {
   "answers":[
     {
-      "playerAnswer":2,
-      "correctAnswer":2
+      "given":2,
+      "correct":2
     }
   ],
-  "totalScore":2
+  "score":2
 }
