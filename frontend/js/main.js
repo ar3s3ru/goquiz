@@ -140,7 +140,8 @@ function populateQuiz() {
             for(j=0;j<data.questions[i].answers.length;j++){
                 content += `<div class="radio"><label><input name="answer" type="radio" value="1">${data.questions[i].answers[i]}</label></div>`
             }
-            content += `</div>
+            content += `<div class="radio"><label><input name="answer" type="radio" value="-1" checked="true">Salta</label></div>
+                            </div>
                         </form>
                     </div>
                 </div>` ;
