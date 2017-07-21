@@ -9,8 +9,14 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Key per ricavare lo userId dal contesto
-const userIDKey = "userId"
+// contextKey identifica la stringa della chiave da usare nel contesto.
+// È pratica comune ridefinire un tipo *unexported* per le chiavi
+// in modo da non rilevare informazioni riguardante valori contenuti nel contesto.
+//
+// È, dunque, una pratica di sicurezza (ed una best-practice, il linter darà un warning :-) )
+type contextKey string
+
+const userIDKey = contextKey("userId")
 
 func main() {
 	r := chi.NewRouter()
@@ -111,7 +117,7 @@ func namedHelloWorld(w http.ResponseWriter, r *http.Request) {
 // in modo da farvi capire come funziona il context :-)
 func simplifyContextValueRetrieval(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id := chi.URLParam(r, userIDKey)
+		id := chi.URLParam(r, string(userIDKey))
 		h.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), userIDKey, id)))
 	})
 }
