@@ -1,16 +1,12 @@
 {
-  "scores":[
+  "scores": [
     {
-      "nickname" : "provaquiz",
-      "score" : 12
+      "user": "Carmine",
+      "score": 10
     },
     {
-      "nickname" : "provaquiz",
-      "score" : 12
-    },
-    {
-      "nickname" : "provaquiz",
-      "score" : 12
+      "user": "Danilo",
+      "score": 10
     }
   ]
 }

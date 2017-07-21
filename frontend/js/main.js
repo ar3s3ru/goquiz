@@ -12,6 +12,7 @@ const apiUrl = "http://mockbin.org/bin/";
 
 let playerUsername = "";
 let quizQuestions = {};
+let idQuiz = "";
 
 
 function handleApiErrors(response){
@@ -25,61 +26,10 @@ function handleApiErrors(response){
     return response;
 }
 
-const question = [
-    {
-        question:"Di che colore era il cavallo bianco di napoleone?",
-        option1:"Lol",
-        option2:"lel",
-        option3:"lulz",
-        option4:"lulze",
-    },
-    {
-        question:"Di che colore era il cavallo grigio di napoleone?",
-        option1:"Lol",
-        option2:"lel",
-        option3:"lulz",
-        option4:"lulze",
-    },
-    {
-        question:"Di che colore era il cavallo blu di napoleone?",
-        option1:"Lol",
-        option2:"lel",
-        option3:"lulz",
-        option4:"lulze",
-    }
-];
-
-const backendResponses =[
-    {
-        playerAnswer:2,
-        rightAnswer:2
-    },
-    {
-        playerAnswer:3,
-        rightAnswer:4
-    },
-    {
-        playerAnswer:2,
-        rightAnswer:1
-    },
-];
-
-const scoreBoard = [
-    {
-        playerName:"Gianni",
-        score:20,
-    },
-    {
-        playerName:"Pino",
-        score:15
-    }
-];
-
 
 function startQuiz() {
     startQuizDialog.setAttribute("style","display:none;");
     playerUsername = document.getElementById("startusername").value;
-    console.log("Nascosto");
     populateQuiz();
 }
 
@@ -119,7 +69,7 @@ function populateQuiz() {
     callApi("623dc115-9d9c-4a5c-8c10-3a3ca4aa6da6",{},"GET", function (data) {
        console.log("Api call successful",data) ;
        quizQuestions = data.questions;
-       console.log("Global quiz",quizQuestions)
+       idQuiz=data.id;
         questionGroup.setAttribute("style","display:inherit,margin-top:60px");
         console.log("POPULATE QUIZ",data,data.questions.length);
         for(i=0;i<data["questions"].length;i++){
@@ -156,8 +106,8 @@ function populateQuiz() {
 function buildAnswers(){
     let answer = [];
     //Loop through questions, and pick up the selected answer
-    for(i=0;i<question.length;i++){
-        let currentAnswer = document.forms["question"+i]["answer"].value;
+    for(i=0;i<quizQuestions.length;i++){
+        let currentAnswer = parseInt(document.forms["question"+i]["answer"].value);
         answer.push(currentAnswer);
     }
     return answer;
@@ -197,30 +147,27 @@ function receiveResponse(data,score){
                             <p><strong>La risposta corretta è:  ${quizQuestions[i].answers[data[i].correct]}</strong></p>
                     </div>
                 </div>`
-         //TODO:ALERT WITH SCORE
             responseArea.appendChild(newAnswerDiv);
         }
     let scoreDiv = `<div class="alert alert-info"><p>Il tuo score è : ${score}</p></div>`
     responseArea.innerHTML += scoreDiv;
-    console.log("end for");
     responseArea.setAttribute("style","display:inherit");
 }
 
 
 
 function getScores() {
-    let backendScores = scoreBoard;
-    let scoreTableBody = document.querySelector("#scoreboard > table");
-    responseArea.setAttribute("style","display:none");
-    for(i=0;i<backendScores.length;i++){
-        let newScoreRow = scoreTableBody.insertRow();
-        let cellName = newScoreRow.insertCell(0);
-        let cellScore = newScoreRow.insertCell(0);
-        cellName.innerHTML = ` ${backendScores[i].score}`;
-        cellScore.innerHTML = `${backendScores[i].playerName}`
-    }
-    console.log(scoreTableBody);
-    scoreBoardArea.setAttribute("style","display:inherit");
-    console.log("Score");
-
+    callApi("7a4feb7a-ca2a-4a02-b5e3-d0042aab9abb",{},"GET", function (data) {
+        let scoreTableBody = document.querySelector("#scoreboard > table");
+        responseArea.setAttribute("style", "display:none");
+        for (i = 0; i < data.scores.length; i++) {
+            let newScoreRow = scoreTableBody.insertRow();
+            let cellName = newScoreRow.insertCell(0);
+            let cellScore = newScoreRow.insertCell(0);
+            cellName.innerHTML = ` ${data.scores[i].score}`;
+            cellScore.innerHTML = `${data.scores[i].user}`;
+        }
+        scoreBoardArea.setAttribute("style", "display:inherit");
+        console.log("Score");
+    });
 }
