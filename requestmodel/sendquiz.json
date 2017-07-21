@@ -1,0 +1,22 @@
+// Request body for answer sending
+
+{
+  "answers": [
+    0,
+    1,
+    2
+  ]
+}
+
+
+// Request body for answer verification
+
+{
+  "score": 2,
+  "results": [
+    {
+      "given": 0,
+      "correct": 0
+    }
+  ]
+}
