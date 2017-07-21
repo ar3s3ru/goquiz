@@ -170,12 +170,12 @@ function sendResults() {
     console.log("Send results");
     console.log("Send to backend:",JSON.stringify(backendRequest));
     callApi("1efffd90-e903-41dd-b511-efd0bbe4ce34",backendRequest,"POST", function (data) {
-        receiveResponse(data.results);
+        receiveResponse(data.results,data.score);
     });
 }
 
 
-function receiveResponse(data){
+function receiveResponse(data,score){
     questionGroup.setAttribute("style","display:none;");
     resultForm.setAttribute("style","display:none");
     console.log("Populating response");
@@ -199,6 +199,8 @@ function receiveResponse(data){
          //TODO:ALERT WITH SCORE
             responseArea.appendChild(newAnswerDiv);
         }
+    let scoreDiv = `<div class="alert alert-info"><p>Il tuo score è : ${score}</p></div>`
+    responseArea.innerHTML += scoreDiv;
     console.log("end for");
     responseArea.setAttribute("style","display:inherit");
 }
