@@ -8,9 +8,11 @@ const questionGroup = document.getElementById("questiongroup");
 const resultForm = document.getElementById("result");
 const responseArea = document.getElementById("backendresponse");
 const scoreBoardArea = document.getElementById("scoreboard");
-
+const apiUrl = "http://mockbin.org/bin/";
 
 let playerUsername = "";
+let quizQuestions = {};
+
 
 function handleApiErrors(response){
     console.log(response);
@@ -73,8 +75,10 @@ const scoreBoard = [
     }
 ];
 
+
 function startQuiz() {
     startQuizDialog.setAttribute("style","display:none;");
+    playerUsername = document.getElementById("startusername").value;
     console.log("Nascosto");
     populateQuiz();
 }
@@ -84,15 +88,16 @@ function callApi(url,body,method,success){
     console.log(url);
     let headers = new Headers();
     headers.append("Content-Type","application/json");
-    headers.append('Authorization', 'Basic ' + base64.encode(playerUsername + ":" + "x"));
+    //headers.append('Authorization', 'Basic ' + btoa(playerUsername + ":" + "x"));
 
     let requestOpt = {
       redirect:"follow",
-        headers:headers
+        headers:headers,
+        mode:"cors"
     };
     requestOpt["method"] = method;
     method === "POST" ? requestOpt["body"] = JSON.stringify(body) :false;
-    let request = new Request(url,requestOpt);
+    let request = new Request(apiUrl + url,requestOpt);
 
     fetch(request)
         .then(handleApiErrors)
@@ -111,8 +116,10 @@ function callApi(url,body,method,success){
 
 
 function populateQuiz() {
-    callApi("http://mockbin.org/bin/623dc115-9d9c-4a5c-8c10-3a3ca4aa6da6",{},"GET", function (data) {
+    callApi("623dc115-9d9c-4a5c-8c10-3a3ca4aa6da6",{},"GET", function (data) {
        console.log("Api call successful",data) ;
+       quizQuestions = data.questions;
+       console.log("Global quiz",quizQuestions)
         questionGroup.setAttribute("style","display:inherit,margin-top:60px");
         console.log("POPULATE QUIZ",data,data.questions.length);
         for(i=0;i<data["questions"].length;i++){
@@ -133,7 +140,6 @@ function populateQuiz() {
             for(j=0;j<data.questions[i].answers.length;j++){
                 content += `<div class="radio"><label><input name="answer" type="radio" value="1">${data.questions[i].answers[i]}</label></div>`
             }
-            console.log("new question div",newQuestionDiv)
             content += `</div>
                         </form>
                     </div>
@@ -151,52 +157,53 @@ function buildAnswers(){
     //Loop through questions, and pick up the selected answer
     for(i=0;i<question.length;i++){
         let currentAnswer = document.forms["question"+i]["answer"].value;
-        answer.push({question:i,answer:currentAnswer});
+        answer.push(currentAnswer);
     }
     return answer;
-
 }
 
 function sendResults() {
-    let resultformValues = document.forms["results"];
     let quizAnswers = buildAnswers();
     let backendRequest = {
-        playerName:resultformValues["name"].value,
-        playerSurname:resultformValues["surname"].value,
         answers:quizAnswers,
     };
     console.log("Send results");
     console.log("Send to backend:",JSON.stringify(backendRequest));
-    receiveResponse();
+    callApi("1efffd90-e903-41dd-b511-efd0bbe4ce34",backendRequest,"POST", function (data) {
+        receiveResponse(data.results);
+    });
 }
 
 
-function receiveResponse(){
-    let backendResponse = backendResponses;
+function receiveResponse(data){
     questionGroup.setAttribute("style","display:none;");
     resultForm.setAttribute("style","display:none");
     console.log("Populating response");
-    for(i=0;i<question.length;i++){
-        let newAnswerDiv = document.createElement("div");
-        newAnswerDiv.id = "question"+i;
-        newAnswerDiv.classList.add("question")
-        newAnswerDiv.innerHTML = `<div class="panel panel-default">
+     for(i=0;i<data.length-1;i++){
+         console.log("Indice i",quizQuestions[i].answers);
+            let newAnswerDiv = document.createElement("div");
+            newAnswerDiv.id = "question"+i;
+            newAnswerDiv.classList.add("question")
+            newAnswerDiv.innerHTML = `<div class="panel panel-default">
                     <div class="panel-heading">
                         Domanda ${i+1}
                     </div>
                     <div class="panel-body">
                         <div class="alert alert-info">
-                            ${question[i].question}
+                            ${quizQuestions[i].question}
                         </div>
-                            <p><strong>Hai risposto: ${question[i]["option"+backendResponse[i].playerAnswer]}</strong></p>
-                            <p><strong>La risposta corretta è: ${question[i]["option"+backendResponse[i].rightAnswer]}</strong></p>
+                            <p><strong>Hai risposto: ${quizQuestions[i].answers[data[i].given]}</strong></p>
+                            <p><strong>La risposta corretta è:  ${quizQuestions[i].answers[data[i].correct]}</strong></p>
                     </div>
                 </div>`
-        responseArea.appendChild(newAnswerDiv);
-    }
+         //TODO:ALERT WITH SCORE
+            responseArea.appendChild(newAnswerDiv);
+        }
     console.log("end for");
     responseArea.setAttribute("style","display:inherit");
 }
+
+
 
 function getScores() {
     let backendScores = scoreBoard;
