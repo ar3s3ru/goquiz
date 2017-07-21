@@ -1,12 +1,13 @@
 {
-  "quizId":"imauniqueid",
-  "questions" : [
-    {
-      "question":"I'm a so difficult go question",
-      "option1":"First option",
-      "option2":"Second option",
-      "option3":"Three option",
-      "option4":"Four option"
-    },
-  ]
+    "id": "62a78263-b612-489b-990c-d941d6931343",
+    "questions": [
+        {
+            "question": "Do you like Go?",
+            "answers": [
+                "Yes",
+                "No",
+                "Maybe"
+            ]
+        }
+    ]
 }
