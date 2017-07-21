@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -23,6 +24,9 @@ func main() {
 		r.Get("/hello", helloWorldSub)
 		r.Get("/ip", getIP)
 	})
+
+	// Avvia il server
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request) {
