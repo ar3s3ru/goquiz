@@ -1,6 +1,5 @@
 # goquiz
 
-<<<<<<< HEAD
 Quiz a risposta multipla online, in cui le domande sono a tema Go :-)
 
 ## Overview
@@ -143,22 +142,17 @@ Il server risponderà sempre `200 OK` su questo endpoint, usando il JSON:
 }
 ```
 
-=======
+## Frontend (by [@CDimonaco](https://github.com/CDimonaco))
 
-## Frontend
+Tutto ciò che c'è da fare e modificare il file `main.js`. 
 
-Tutto ciò che c'è da fare e modificare il file main.js
+Nella variabile `apiUrl` inserire la base path della vostra API.
 
-nella variabile
+Sostituire nelle varie chiamate `fetch` l'endpoint corrispondente alla descrizione.
 
-`apiUrl` inserire la base path della vostra api.
+__N.B.__ Inserire solo la parte `/endpoint`!  
+Omettere tutto ciò che viene prima, dato che è esplicitato nella variabile `apiUrl`!
 
-Sostituire nelle varie chiamate `fetch`, l'endpoint corrispondente alla descrizione.
-
-N.B. Inserire solo la parte /endpoint!, omettere tutto ciò che viene prima, dato che è esplicitato nella variabile `apiUrl`
-
-Buon coding!
->>>>>>> origin/develop/frontend
 ---
 
 Created by [@ar3s3ru](https://github.com/ar3s3ru) and [@CDimonaco](https://github.com/CDimonaco).

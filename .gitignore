@@ -1,6 +1,3 @@
-<<<<<<< HEAD
 .vscode/*
 vendor/*
-=======
 frontend/bower_components
->>>>>>> origin/develop/frontend
