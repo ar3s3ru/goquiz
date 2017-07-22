@@ -1,0 +1,133 @@
+{
+  "questions": [{
+    "question": "che cosa sono le interfacce in Go?",
+    "score": 10,
+    "answers": [
+      "sono collezioni di signature di metodi.",
+      "sono delle classi",
+      "sono delle strutture"
+    ],
+    "correct": 0
+  },
+    {
+      "question": "che cosa sono le structs in Go?",
+      "score": 10,
+      "answers": [
+        "sono collezioni di signature di metodi.",
+        "sono dei tipi particolari di classi",
+        "le structs sono collezioni di campi a cui è associato un tipo."
+      ],
+      "correct": 0
+    },
+    {
+      "question": "è possibile associare dei metodi ad una struct Go?",
+      "score": 10,
+      "answers": [
+        "sì",
+        "no",
+        "no, Go non ha le classi e quindi nemmeno i metodi"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Go è debolmente tipato",
+      "score": 5,
+      "answers": [
+        "sì",
+        "no",
+        "sì perché è possibile assegnare una variabile secondo il modo x:=42"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "a cosa serve il comando Go <nome funzione> ?",
+      "score": 10,
+      "answers": [
+        "serve a definire un metodo",
+        "serve a chiamare una funzione",
+        "serve a lanciare una Goroutine"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "Qual è la firma corretta del metodo di una struct?",
+      "score": 20,
+      "answers": [
+        "structName.nomeFunzione()",
+        "func (r structName) nomeFunzione() int",
+        "public int nomeFunzione()"
+      ],
+      "correct": 1
+    },
+    {
+      "question": "Qual è il modo corretto per definire una funzione Go?",
+      "score": 20,
+      "answers": [
+        "public int nomeFunzione()",
+        "var nomefunzione = func()",
+        "func nomeFunzione() (int, int)"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "Qual è la differenza tra slice e array in Go?",
+      "score": 10,
+      "answers": [
+        "rendono la gestione degli array più semplice. Le slice hanno un operatore : che permette di prendere sottoslice in modo semplice e rapido e non hanno una lunghezza specificata come gli array",
+        "slice e array sono la stessa cosa",
+        "l'unica differenza sta nel fatto che le slice sono dinamiche mentre gli array sono statici"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "Qual è il nome della mascotte di Go?",
+      "score": 5,
+      "answers": [
+        "Goofy",
+        "Godzilla",
+        "Gopher"
+      ],
+      "correct": 2
+    },
+    {
+      "question": "Come si definisce una classe in Go?",
+      "score": 20,
+      "answers": [
+        "class <nomeClasse>",
+        "Go class <nomeClasse>",
+        "Go non ha le classi"
+      ],
+      "correntAnswer": 2
+    },
+    {
+      "question": "Go permette l'utilizzo dei puntatori?",
+      "score": 5,
+      "answers": [
+        "AHAHAHAHAHAHAHAHA",
+        "NO",
+        "Sì..."
+      ],
+      "correct": 2
+    },
+    {
+      "question": "come si definisco le variabili in Go",
+      "score": 10,
+      "answers": [
+        "var x int = 42",
+        "let x = 42",
+        "int x = 42"
+      ],
+      "correct": 0
+    },
+    {
+      "question": "quale di queste definizioni di variabili è sbagliata?",
+      "score": 10,
+      "answers": [
+        "var x int = 42",
+        "x := 42",
+        "var int x = 42"
+      ],
+      "correct": 2
+    }
+  ]
+}
