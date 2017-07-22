@@ -1,6 +1,39 @@
-hash: e902011a0ede38f8dad0f3e13525f365aeadc82d228e4b11e6d13a1e47d7735d
-updated: 2017-07-21T07:37:16.055158767+02:00
+hash: 011631c897db002348d65458ce990aba7ed8a2db1a7ef2eefdba9e7e0bb841cf
+updated: 2017-07-22T13:08:47.890104197+02:00
 imports:
 - name: github.com/go-chi/chi
-  version: 08660a0ad10a8fa7beab3ad43afe66373d49d06a
-testImports: []
+  version: 12a98d329f12aac9e94b72c713437350c948a5e2
+- name: github.com/h2non/baloo
+  version: 07721c4c93632cbba22ea5c7d5b4fa39745db49d
+  subpackages:
+  - assert
+testImports:
+- name: github.com/xeipuuv/gojsonpointer
+  version: 6fe8760cad3569743d51ddbb243b26f8456742dc
+- name: github.com/xeipuuv/gojsonreference
+  version: e02fc20de94c78484cd5ffb007f8af96be030a45
+- name: github.com/xeipuuv/gojsonschema
+  version: 0c8571ac0ce161a5feb57375a9cdf148c98c0f70
+- name: golang.org/x/net
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
+  subpackages:
+  - publicsuffix
+- name: gopkg.in/h2non/baloo.v1
+  version: 07721c4c93632cbba22ea5c7d5b4fa39745db49d
+  subpackages:
+  - assert
+- name: gopkg.in/h2non/gentleman.v1
+  version: 1f1771a3f977fccd9f5025c0a9c103a3704f5e79
+  subpackages:
+  - context
+  - middleware
+  - mux
+  - plugin
+  - plugins/body
+  - plugins/bodytype
+  - plugins/cookies
+  - plugins/headers
+  - plugins/multipart
+  - plugins/query
+  - plugins/url
+  - utils
