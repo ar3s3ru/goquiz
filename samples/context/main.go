@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync/atomic"
 
 	"github.com/go-chi/chi"
 )
@@ -16,10 +17,22 @@ import (
 // È, dunque, una pratica di sicurezza (ed una best-practice, il linter darà un warning :-) )
 type contextKey string
 
-const userIDKey = contextKey("userId")
+const counterKey = contextKey("requestCounter")
+
+// counter è il contatore atomico che utilizzeremo per sapere il numero di richieste effettuate
+var counter uint64
 
 func main() {
 	r := chi.NewRouter()
+	// Questa funzione è un middleware; qui andiamo a modificare il contesto per tutte le chiamate
+	// HTTP che arrivano. Consultate il working sample sui middleware per saperne di più!
+	r.Use(func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// setRequestNumber modifica il contesto della richiesta in arrivo,
+			// e il middleware esegue l'Handler vero e proprio con il contesto modificato.
+			h.ServeHTTP(w, r.WithContext(setRequestNumber(r.Context())))
+		})
+	})
 
 	// `userId` è un parametro che viene dall'URL della richiesta HTTP.
 	// Una richiesta del tipo
@@ -28,81 +41,65 @@ func main() {
 	//
 	// assegna "greatNickname" ad `userId` nel `context.Context``
 	// della `http.Request`.
+	// Il contenuto del parametro URL può essere ricavato da
+	//
+	//     chi.URLParam(r *http.Request, key string)
 	//
 	// Vedi https://github.com/go-chi/chi#url-parameters
-	//
-	r.With(simplifyContextValueRetrieval).Get("/{userId}", namedHelloWorld)
-
-	r.With(
-		simplifyContextValueRetrieval,
-		// Questo è un middleware, verrà illustrato nel working sample relativo.
-		// In breve è un *decoratore*, ovvero una funzione che estende
-		// il comportamento di un'altra funzione.
-		//
-		// La modifica del contesto tramite `modifyUserID` è fatta qui.
-		func(h http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				h.ServeHTTP(w, r.WithContext(
-					// Utiliza la stessa `http.Request` ma con `context.Context`
-					// ricavato dalla chiamata a `modifyUserID`.
-					modifyUserID(r.Context()),
-				))
-			})
-		},
-	).Get("/modify/{userId}", namedHelloWorld)
+	r.Get("/{userId}", namedHelloWorld)
 
 	// Avvia il server
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-// getUserID ricava lo userId (definito come stringa) dal context.Context
-// fornito.
+// getRequestNumber ricava il numero della richiesta (definito come uint64)
+// dal context.Context fornito.
 //
 // `ok` è una guardia booleana che indica se il contenuto di `id` è valido.
 // In altre parole, stabilisce se la funzione è andata a buon fine.
 //
 // Usate la funzione così (è, tra l'altro, "idiomatic go")
 //
-//     if id, ok := getUserID(ctx); ok {
+//     if id, ok := getRequestNumber(ctx); ok {
 //	       // Usa `id` qui
 //     }
 //
 // Oppure
 //
-//     id, ok := getUserID(ctx)
+//     id, ok := getRequestNumber(ctx)
 //     if !ok {
 //         // Gestisci il caso sfavorevole...
 //     }
 //     // Gestisci il caso favorevole...
 //
-func getUserID(ctx context.Context) (id string, ok bool) {
+func getRequestNumber(ctx context.Context) (id uint64, ok bool) {
 	// Prendi lo userId dal contesto
-	v := ctx.Value(userIDKey)
-	if v == nil { // Se v è nil, allora nessuno userId è stato inserito
+	v := ctx.Value(counterKey)
+	if v == nil {
+		// Se v è nil, allora nessun counter è stato aggiunto al contesto,
+		// il che vuol dire che avete sbagliato qualcosa in fase di routing :)
 		return
 	}
-	// Fai type assertion per stabilire se il valore dello userId
-	// trovato sia effettivamente un intero
-	id, ok = v.(string)
+	// Fai type assertion per stabilire se il valore dell'id
+	// trovato sia effettivamente un uin64
+	id, ok = v.(uint64)
 	return
 }
 
-// modifyUserID prende il `context.Context`, cerca lo userId e lo modifica,
-// restituendo il contesto con l'id modificato.
-func modifyUserID(ctx context.Context) context.Context {
-	id, ok := getUserID(ctx)
-	if !ok {
-		return ctx
-	}
-	// Modifica il valore dello userId aggiungendo "-MODIFIED" in coda
-	return context.WithValue(ctx, userIDKey, fmt.Sprintf("%s-MODIFIED", id))
+// setRequestNumber prende il `context.Context` e inserisce il numero
+// della richiesta attuale al suo interno.
+func setRequestNumber(ctx context.Context) context.Context {
+	// `WithValue` ritorna un contesto "arricchito" da un nuovo valore.
+	// In questo caso, poichè le richieste possono essere concorrenti,
+	// utilizziamo `atomic` per assicurare la consistenza del counter generale.
+	return context.WithValue(ctx, counterKey, atomic.AddUint64(&counter, 1))
 }
 
 func namedHelloWorld(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// Prendi lo userId dal contesto della richiesta
-	id, ok := getUserID(r.Context())
+	id, ok := getRequestNumber(r.Context())
 	if !ok {
 		// Nessun id è stato specificato, very bad
 		w.WriteHeader(http.StatusBadRequest)
@@ -110,14 +107,9 @@ func namedHelloWorld(w http.ResponseWriter, r *http.Request) {
 	}
 	// Printa un "Hello World" usando l'id ricavato
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("Hello World, %s!", id)))
-}
-
-// Questa funzione è un middleware, serve per semplificare l'utilizzo di `chi`
-// in modo da farvi capire come funziona il context :-)
-func simplifyContextValueRetrieval(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id := chi.URLParam(r, string(userIDKey))
-		h.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), userIDKey, id)))
-	})
+	w.Write([]byte(fmt.Sprintf(
+		"Hello World, %s!\nRequest number: %d",
+		chi.URLParam(r, "userId"), // Prendi il parametro URL relativo a `userId`
+		id, // ID della richiesta trovato in precedenza
+	)))
 }
