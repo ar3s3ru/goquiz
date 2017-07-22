@@ -3,11 +3,16 @@ package repo
 // Question rappresenta una domanda del quiz.
 type Question struct {
 	question string
+	correct  uint
 	answers  []string
 }
 
 func (q Question) Question() string {
 	return q.question
+}
+
+func (q Question) Correct() uint {
+	return q.correct
 }
 
 func (q Question) Answers() []string {
