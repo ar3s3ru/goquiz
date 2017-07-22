@@ -1,3 +1,4 @@
 .vscode/*
 vendor/*
 .idea/*
+frontend/bower_components

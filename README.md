@@ -142,6 +142,17 @@ Il server risponderà sempre `200 OK` su questo endpoint, usando il JSON:
 }
 ```
 
+## Frontend (by [@CDimonaco](https://github.com/CDimonaco))
+
+Tutto ciò che c'è da fare e modificare il file `main.js`. 
+
+Nella variabile `apiUrl` inserire la base path della vostra API.
+
+Sostituire nelle varie chiamate `fetch` l'endpoint corrispondente alla descrizione.
+
+__N.B.__ Inserire solo la parte `/endpoint`!  
+Omettere tutto ciò che viene prima, dato che è esplicitato nella variabile `apiUrl`!
+
 ---
 
 Created by [@ar3s3ru](https://github.com/ar3s3ru) and [@CDimonaco](https://github.com/CDimonaco).
