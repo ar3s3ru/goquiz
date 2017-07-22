@@ -1,5 +1,4 @@
 // Request body for answer sending
-
 {
   "answers": [
     0,
@@ -10,13 +9,24 @@
 
 
 // Request body for answer verification
-
 {
-  "score": 2,
+  "score": 999,
   "results": [
     {
-      "given": 0,
-      "correct": 0
+      "given": 1,
+      "correct": 2,
+    },
+    {
+      "given": 1,
+      "correct": 2,
+    },
+    {
+      "given": 1,
+      "correct": 2,
+    },
+    {
+      "given": 1,
+      "correct": 2,
     }
   ]
 }

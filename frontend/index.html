@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Golab Pisa - Go Quiz!</title>
+    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
+</head>
+<style>
+    #startquiz{
+        margin-top:30%;
+        font-size:18px;
+        font-family: 'Zilla Slab', serif;
+    }
+    #gl{
+        font-size:20px;
+    }
+    .question{
+        margin-top: 20px;
+        margin-bottom:20px;
+    }
+    .resultitem{
+        margin-right: 10%;
+    }
+    .labelresult{
+        margin-right: 8px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div id="title" class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Golab Pisa - Go Quiz
+                </h1>
+            </div>
+        </div>
+
+        <div id="startquiz" class="panel panel-default">
+            <div class="panel-heading">
+                Il quiz
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-11">
+                        <p>Benvenuto,<br> dovrai rispondere a venti domande a risposta multipla, avrai la possibilità di cambiare le risposte prima di inviare i risultati.</p>
+                        <p>Per cominciare a giocare clicca su Start</p>
+                        <p id="gl">Buona fortuna!</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-lg-offset-4">
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="startusername" placeholder="Inserisci username" style="margin-right: 5px">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <button onclick="startQuiz()" class="btn btn-default">Start!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="questiongroup">
+
+                </div>
+            </div>
+        </div>
+
+        <div style="display: none" id="result">
+            <div class="row">
+                <div class="col lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Invia il test
+                        </div>
+                        <div class="panel-body">
+                                <div class="form-group text-center">
+                                    <button onclick="sendResults()" type="button" class="btn btn-success">Invia risultato test</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div style="display: none; margin-top:3%;" id="backendresponse" class="col-lg-12">
+                <div class="text-center">
+                    <h2>Il tuo risultato</h2>
+                    <button onclick="getScores()" class="btn btn-success">Mostra classifica</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div style="display: none" id="scoreboard" class="col-lg-12">
+                <div style="margin-bottom: 20px" class="text-center">
+                    <h2>Classifica Generale</h2>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="./js/main.js"></script>
+</body>
+</html>
