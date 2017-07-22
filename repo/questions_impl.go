@@ -6,6 +6,17 @@ import (
 	"math/rand"
 	"time"
 
+	"sync"
+
+	"net/http"
+
+	"os"
+
+	"encoding/json"
+	"io/ioutil"
+
+	"context"
+
 	"github.com/satori/go.uuid"
 )
 
@@ -27,12 +38,10 @@ type questionsImpl struct {
 	requests  chan func([]question, map[string]quiz)
 }
 
-var questions = &questionsImpl{
-	quizzes:  make(map[string]quiz),
-	requests: make(chan func([]question, map[string]quiz), 1),
-}
+var questions *questionsImpl
+var once sync.Once
 
-func init() {
+func (q *questionsImpl) init() {
 	go func(q *questionsImpl) {
 		for request := range q.requests {
 			request(q.questions, q.quizzes)
@@ -113,3 +122,69 @@ func randIndexes(len, limit uint) (res []int) {
 	}
 	return
 }
+
+// Context stuff ------------------------------------------------------------------------
+
+var questionsKey = &contextKey{name: "questions"}
+
+func panicEventually(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func InmemQuestionsRepository(jsonFile string) func(http.Handler) http.Handler {
+	// Inizializza per la prima volta il repository.
+	once.Do(func() {
+		file, err := os.Open(jsonFile)
+		panicEventually(err)
+
+		raw, err := ioutil.ReadAll(file)
+		panicEventually(err)
+
+		var slice []question
+		panicEventually(json.Unmarshal(raw, &slice))
+
+		questions = &questionsImpl{
+			questions: slice,
+			quizzes:   make(map[string]quiz),
+			requests:  make(chan func([]question, map[string]quiz)),
+		}
+		questions.init()
+	})
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r.WithContext(
+				context.WithValue(r.Context(), questionsKey, questions),
+			))
+		})
+	}
+}
+
+func NewQuizRepositoryFromContext(ctx context.Context) (NewQuizRepository, error) {
+	v := ctx.Value(questionsKey)
+	if v == nil {
+		goto err
+	}
+	if q, ok := v.(NewQuizRepository); ok {
+		return q, nil
+	}
+err:
+	return nil, ErrNoLeaderboardRepositoryInContext
+}
+
+func GetQuizRepositoryFromContext(ctx context.Context) (GetQuizRepository, error) {
+	v := ctx.Value(questionsKey)
+	if v == nil {
+		goto err
+	}
+	if q, ok := v.(GetQuizRepository); ok {
+		return q, nil
+	}
+err:
+	return nil, ErrNoLeaderboardRepositoryInContext
+}
+
+var (
+	ErrNoQuizRepositoryInContext = errors.New("no quiz repository in the context")
+)
