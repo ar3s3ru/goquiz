@@ -8,7 +8,7 @@ const questionGroup = document.getElementById("questiongroup");
 const resultForm = document.getElementById("result");
 const responseArea = document.getElementById("backendresponse");
 const scoreBoardArea = document.getElementById("scoreboard");
-const apiUrl = "http://mockbin.org/bin/";
+const apiUrl = "http://localhost:???";
 
 let playerUsername = "";
 let quizQuestions = {};
@@ -38,7 +38,7 @@ function callApi(url,body,method,success){
     console.log(url);
     let headers = new Headers();
     headers.append("Content-Type","application/json");
-    //headers.append('Authorization', 'Basic ' + btoa(playerUsername + ":" + "x"));
+    headers.append('Authorization', 'Basic ' + btoa(playerUsername + ":" + "x"));
 
     let requestOpt = {
       redirect:"follow",
@@ -66,7 +66,7 @@ function callApi(url,body,method,success){
 
 
 function populateQuiz() {
-    callApi("623dc115-9d9c-4a5c-8c10-3a3ca4aa6da6",{},"GET", function (data) {
+    callApi("endpointstartquiz",{},"GET", function (data) {
        console.log("Api call successful",data) ;
        quizQuestions = data.questions;
        idQuiz=data.id;
@@ -120,7 +120,7 @@ function sendResults() {
     };
     console.log("Send results");
     console.log("Send to backend:",JSON.stringify(backendRequest));
-    callApi("1efffd90-e903-41dd-b511-efd0bbe4ce34",backendRequest,"POST", function (data) {
+    callApi("endpointquizresult",backendRequest,"POST", function (data) {
         receiveResponse(data.results,data.score);
     });
 }
@@ -157,7 +157,7 @@ function receiveResponse(data,score){
 
 
 function getScores() {
-    callApi("7a4feb7a-ca2a-4a02-b5e3-d0042aab9abb",{},"GET", function (data) {
+    callApi("endpointscore",{},"GET", function (data) {
         let scoreTableBody = document.querySelector("#scoreboard > table");
         responseArea.setAttribute("style", "display:none");
         for (i = 0; i < data.scores.length; i++) {
